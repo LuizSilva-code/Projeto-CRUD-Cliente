@@ -9,5 +9,6 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
         List<ResponseClienteDTO> ListarClientes();
         bool EditarCliente(int id, EditarClienteDTO dto);
         bool InativarCliente(int id);
+        void AlterarSenha(int id, string novaSenha);
     }
 }

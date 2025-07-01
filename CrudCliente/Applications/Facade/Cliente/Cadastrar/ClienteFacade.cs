@@ -60,5 +60,10 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
         {
             return _clienteRepository.InativarCliente(id);
         }
+
+        public void AlterarSenha(int id, string novaSenha)
+        {
+            _clienteRepository.AlterarSenha(id, novaSenha);
+        }
     }
 }

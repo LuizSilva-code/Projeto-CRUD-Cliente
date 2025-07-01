@@ -88,5 +88,20 @@ namespace CrudCliente.Controllers
                 return BadRequest("Erro ao inativar cliente.");
             }
         }
+
+        [HttpPut]
+        [Route("/AlterarSenha/Cliente/{id:int}")]
+        public IActionResult AlterarSenhaCliente(int id, [FromBody] string novaSenha)
+        {
+            try
+            {
+                 _clienteFacade.AlterarSenha(id, novaSenha);
+                return Ok("Senha alterada com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao alterar senha.");
+            }
+        }
     }
 }

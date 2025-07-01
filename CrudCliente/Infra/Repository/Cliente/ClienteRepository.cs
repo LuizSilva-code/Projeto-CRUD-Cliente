@@ -273,6 +273,28 @@ namespace CrudCliente.Infra.Repository.Cliente
             }
         }
 
+        public void AlterarSenha(int id, string novaSenha)
+        {
+            using var connection = _context.Database.GetDbConnection();
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+            try
+            {
+                var updateCmd = connection.CreateCommand();
+                updateCmd.Transaction = transaction;
+                updateCmd.CommandText = "UPDATE Clientes SET Senha = @Senha WHERE Id = @Id;";
+                AddParameter(updateCmd, "@Senha", novaSenha);
+                AddParameter(updateCmd, "@Id", id);
+                updateCmd.ExecuteNonQuery();
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
         private void AddParameter(DbCommand command, string name, object value)
         {
             var parameter = command.CreateParameter();
