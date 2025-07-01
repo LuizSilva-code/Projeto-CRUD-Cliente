@@ -107,7 +107,7 @@ namespace CrudCliente.Controllers
         }
 
         [HttpPost]
-        [Route("Cadastrar/Cartao/{id:int}")]
+        [Route("/CadastrarCartao/Cliente/{id:int}")]
         public IActionResult CadastrarCartao(int id,[FromBody] CartaoDTO cartao)
         {
             try
