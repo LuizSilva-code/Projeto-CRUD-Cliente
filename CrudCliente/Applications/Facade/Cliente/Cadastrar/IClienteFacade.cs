@@ -8,5 +8,6 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
         void CadastrarCliente(ClienteDTO clientedto);
         List<ResponseClienteDTO> ListarClientes();
         bool EditarCliente(int id, EditarClienteDTO dto);
+        bool InativarCliente(int id);
     }
 }

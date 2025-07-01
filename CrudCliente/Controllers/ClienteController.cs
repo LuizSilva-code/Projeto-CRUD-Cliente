@@ -72,5 +72,19 @@ namespace CrudCliente.Controllers
                 return BadRequest("Erro ao atualizar cliente");
             }
         }
+
+        [HttpPut]
+        [Route("/Inativar/Cliente/{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult InativarCliente(int id)
+        {
+            var sucesso = _clienteFacade.InativarCliente(id);
+
+            if (!sucesso)
+                return NotFound("Cliente não encontrado.");
+
+            return Ok("Cliente inativado com sucesso!");
+        }
     }
 }

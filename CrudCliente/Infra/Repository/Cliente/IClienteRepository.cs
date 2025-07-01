@@ -8,5 +8,6 @@ namespace CrudCliente.Infra.Repository.Cliente
         void CadastrarCliente(ClienteEntity cliente, EnderecoEntity endereco, TelefoneEntity telefone);
         List<ClienteEntity> ListarClientes();
         bool EditarCliente(int id, EditarClienteDTO dto);
+        bool InativarCliente(int id);
     }
 }

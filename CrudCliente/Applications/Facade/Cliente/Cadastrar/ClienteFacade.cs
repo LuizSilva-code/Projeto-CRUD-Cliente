@@ -55,5 +55,10 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
 
             return _clienteRepository.EditarCliente(id, dto);
         }
+
+        public bool InativarCliente(int id)
+        {
+            return _clienteRepository.InativarCliente(id);
+        }
     }
 }
