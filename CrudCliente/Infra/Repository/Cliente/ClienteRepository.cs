@@ -235,6 +235,66 @@ namespace CrudCliente.Infra.Repository.Cliente
             }
         }
 
+        public bool InativarCliente(int id)
+        {
+            using var connection = _context.Database.GetDbConnection();
+            connection.Open();
+
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                var checkCmd = connection.CreateCommand();
+                checkCmd.Transaction = transaction;
+                checkCmd.CommandText = "SELECT COUNT(*) FROM Clientes WHERE Id = @Id;";
+                AddParameter(checkCmd, "@Id", id);
+
+                var exists = Convert.ToInt32(checkCmd.ExecuteScalar()) > 0;
+                if (!exists)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+
+                var updateCmd = connection.CreateCommand();
+                updateCmd.Transaction = transaction;
+                updateCmd.CommandText = "UPDATE Clientes SET CadastroAtivo = 0 WHERE Id = @Id;";
+                AddParameter(updateCmd, "@Id", id);
+
+                var rows = updateCmd.ExecuteNonQuery();
+                transaction.Commit();
+
+                return rows > 0;
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
+        public void AlterarSenha(int id, string novaSenha)
+        {
+            using var connection = _context.Database.GetDbConnection();
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+            try
+            {
+                var updateCmd = connection.CreateCommand();
+                updateCmd.Transaction = transaction;
+                updateCmd.CommandText = "UPDATE Clientes SET Senha = @Senha WHERE Id = @Id;";
+                AddParameter(updateCmd, "@Senha", novaSenha);
+                AddParameter(updateCmd, "@Id", id);
+                updateCmd.ExecuteNonQuery();
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
         private void AddParameter(DbCommand command, string name, object value)
         {
             var parameter = command.CreateParameter();

@@ -32,14 +32,14 @@ namespace CrudCliente.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Erro ao cadastrar, revise os dados enviados");
+                return BadRequest("Erro ao cadastrar, revise os dados enviados!!");
             }
         }
 
         [HttpGet]
         [Route("/Listar/Cliente")]
         [ProducesResponseType(typeof(List<ResponseClienteDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult ListarClientes()
         {
             try
@@ -55,9 +55,6 @@ namespace CrudCliente.Controllers
 
         [HttpPut]
         [Route("/Editar/Cliente/{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult EditarCliente(int id, [FromBody] EditarClienteDTO dto)
         {
             try
@@ -72,6 +69,40 @@ namespace CrudCliente.Controllers
             catch (Exception ex)
             {
                 return BadRequest("Erro ao atualizar cliente");
+            }
+        }
+
+        [HttpPut]
+        [Route("/Inativar/Cliente/{id:int}")]
+        public IActionResult InativarCliente(int id)
+        {
+            try
+            {
+                var sucesso = _clienteFacade.InativarCliente(id);
+
+                if (!sucesso)
+                    return BadRequest("Erro ao inativar cliente.");
+
+                return Ok("Cliente inativado com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao inativar cliente.");
+            }
+        }
+
+        [HttpPut]
+        [Route("/AlterarSenha/Cliente/{id:int}")]
+        public IActionResult AlterarSenhaCliente(int id, [FromBody] string novaSenha)
+        {
+            try
+            {
+                 _clienteFacade.AlterarSenha(id, novaSenha);
+                return Ok("Senha alterada com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao alterar senha.");
             }
         }
 
