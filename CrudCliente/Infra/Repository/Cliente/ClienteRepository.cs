@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using System.Data.Common;
 
+
+
 //Add comentario teste
 
 namespace CrudCliente.Infra.Repository.Cliente
