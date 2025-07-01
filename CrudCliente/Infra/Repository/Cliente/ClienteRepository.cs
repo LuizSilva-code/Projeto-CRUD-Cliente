@@ -8,9 +8,6 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using System.Data.Common;
 
 
-
-//Add comentario teste
-
 namespace CrudCliente.Infra.Repository.Cliente
 {
     public class ClienteRepository : IClienteRepository
