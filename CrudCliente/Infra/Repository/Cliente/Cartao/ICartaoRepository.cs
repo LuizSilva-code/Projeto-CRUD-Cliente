@@ -4,6 +4,6 @@ namespace CrudCliente.Infra.Repository.Cliente.Cartao
 {
     public interface ICartaoRepository
     {
-        CartaoDeCreditoEntity CadastrarCartao(CartaoDeCreditoEntity cartao);
+        void CadastrarCartao(int id, CartaoDeCreditoEntity cartao);
     }
 }

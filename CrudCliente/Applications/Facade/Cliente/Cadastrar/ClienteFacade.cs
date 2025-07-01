@@ -16,10 +16,9 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
         private readonly IClienteRepository _clienteRepository;
         private readonly IEnderecoRepository _enderecoRepository;
         private readonly ITelefoneRepository _telefoneRepository;
-        public ClienteFacade(IMapper mapper, ICartaoRepository cartaoRepository, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository)
+        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository)
         {
             _mapper = mapper;
-            _cartaoRepository = cartaoRepository;
             _clienteRepository = clienteRepository;
             _telefoneRepository = telefoneRepository;
             _enderecoRepository = enderecorepository;

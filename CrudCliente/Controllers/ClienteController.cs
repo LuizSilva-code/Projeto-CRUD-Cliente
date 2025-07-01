@@ -11,10 +11,12 @@ namespace CrudCliente.Controllers
     public class ClienteController : ControllerBase
     {
         private readonly IClienteFacade _clienteFacade;
+        private readonly ICartaoFacade _cartaoFacade;
 
-        public ClienteController(IClienteFacade clienteFacade)
+        public ClienteController(IClienteFacade clienteFacade, ICartaoFacade cartaofacade)
         {
             _clienteFacade = clienteFacade;
+            _cartaoFacade = cartaofacade;
 
         }
 
@@ -70,6 +72,21 @@ namespace CrudCliente.Controllers
             catch (Exception ex)
             {
                 return BadRequest("Erro ao atualizar cliente");
+            }
+        }
+
+        [HttpPost]
+        [Route("Cadastrar/Cartao/{id:int}")]
+        public IActionResult CadastrarCartao(int id,[FromBody] CartaoDTO cartao)
+        {
+            try
+            {
+                _cartaoFacade.CadastrarCartao(id, cartao);
+                return Ok("Cartão cadastrado com sucesso!");
+            }
+            catch
+            {
+                return BadRequest("Erro ao cadastrar cartão, revise os dados enviados.");
             }
         }
     }

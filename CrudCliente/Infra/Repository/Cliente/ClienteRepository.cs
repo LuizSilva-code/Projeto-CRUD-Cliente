@@ -77,7 +77,7 @@ namespace CrudCliente.Infra.Repository.Cliente
                 var insertTelefoneSql = @"
                 INSERT INTO Telefones (ClienteId, TipoTelefone, Ddd, Numero)
                 VALUES (@ClienteId, @TipoTelefone, @Ddd, @Numero);
-            ";
+                ";
 
                 var telefoneCommand = connection.CreateCommand();
                 telefoneCommand.Transaction = transaction;

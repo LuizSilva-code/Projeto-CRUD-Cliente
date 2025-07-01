@@ -25,6 +25,8 @@ builder.Services.AddScoped<ICartaoRepository, CartaoRepository>();
 builder.Services.AddScoped<ITelefoneRepository, TelefoneRepository>();
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 builder.Services.AddScoped<ICartaoRepository, CartaoRepository>();
+builder.Services.AddScoped<ICartaoFacade, CartaoFacade>();
+
 
 var app = builder.Build();
 
