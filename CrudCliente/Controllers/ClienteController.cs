@@ -64,9 +64,9 @@ namespace CrudCliente.Controllers
 
                 return Ok("Cliente atualizado com sucesso!");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("Erro ao atualizar cliente");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -100,7 +100,7 @@ namespace CrudCliente.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Erro ao alterar senha.");
+                return BadRequest(ex.Message);
             }
         }
 

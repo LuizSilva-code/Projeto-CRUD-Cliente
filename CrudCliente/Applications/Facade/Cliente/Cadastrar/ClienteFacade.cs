@@ -63,6 +63,7 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
             var clienteEntity = _mapper.Map<ClienteEntity>(dto);
             clienteEntity.Id = id;
 
+            _validarSenhaForteStrategy.Validar(clienteEntity.Senha);
             _clienteRepository.EditarCliente(id, clienteEntity);
         }
 
@@ -73,6 +74,7 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
 
         public void AlterarSenha(int id, string novaSenha)
         {
+            _validarSenhaForteStrategy.Validar(novaSenha);
             _clienteRepository.AlterarSenha(id, novaSenha);
         }
     }
