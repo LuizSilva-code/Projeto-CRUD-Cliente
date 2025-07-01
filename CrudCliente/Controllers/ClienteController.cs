@@ -30,7 +30,7 @@ namespace CrudCliente.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Erro ao cadastrar, revise os dados enviados");
+                return BadRequest("Erro ao cadastrar, revise os dados enviados!");
             }
         }
 
