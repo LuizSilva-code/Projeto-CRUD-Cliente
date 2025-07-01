@@ -27,14 +27,15 @@ namespace CrudCliente.Controllers
             try
             {
                 _clienteFacade.CadastrarCliente(cliente);
-
                 return Ok("Cliente cadastrado com sucesso!");
             }
             catch (Exception ex)
             {
-                return BadRequest("Erro ao cadastrar, revise os dados enviados!!");
+                // Retorna a mensagem de erro específica da validação da senha
+                return BadRequest(ex.Message);
             }
         }
+
 
         [HttpGet]
         [Route("/Listar/Clientes")]
@@ -121,7 +122,6 @@ namespace CrudCliente.Controllers
         
 
         ////TODO Método Filtrar Cliente (Front).
-        //       Método Validar Senha forte. (Strategy)
         //       Método Criptografar senha
         //       Método ValidarExistencia Enderecos
     }

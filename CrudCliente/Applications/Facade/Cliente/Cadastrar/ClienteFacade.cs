@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CrudCliente.Applications.DTO;
 using CrudCliente.Applications.Strategy;
+using CrudCliente.Applications.Strategy.Validators;
 using CrudCliente.Domain.Entities;
 using CrudCliente.Infra.Repository.Cliente;
 using CrudCliente.Infra.Repository.Cliente.Cartao;
@@ -18,19 +19,24 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
         private readonly IEnderecoRepository _enderecoRepository;
         private readonly ITelefoneRepository _telefoneRepository;
         private readonly AtribuirNumeroRankingStrategy _atribuirNumeroRankingStrategy;
+        private readonly ValidarSenhaForteStrategy _validarSenhaForteStrategy;
 
-        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository, AtribuirNumeroRankingStrategy atribuirNumeroRankingStrategy)
+
+        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository, AtribuirNumeroRankingStrategy atribuirNumeroRankingStrategy, ValidarSenhaForteStrategy validarSenhaForteStrategy)
         {
             _mapper = mapper;
             _clienteRepository = clienteRepository;
             _telefoneRepository = telefoneRepository;
             _enderecoRepository = enderecorepository;
             _atribuirNumeroRankingStrategy = atribuirNumeroRankingStrategy;
+            _validarSenhaForteStrategy = validarSenhaForteStrategy;
         }
 
         public void CadastrarCliente(ClienteDTO clientedto)
         {
+            _validarSenhaForteStrategy.Validar(clientedto.Senha);
             clientedto.NumRanking = _atribuirNumeroRankingStrategy.AtribuirNumeroNoRanking();
+
             var cliente = _mapper.Map<ClienteEntity>(clientedto);
             var endereco = _mapper.Map<EnderecoEntity>(clientedto);
             var telefone = _mapper.Map<TelefoneEntity>(clientedto);
