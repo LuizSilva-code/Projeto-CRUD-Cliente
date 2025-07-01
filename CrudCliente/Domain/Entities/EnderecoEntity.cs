@@ -18,7 +18,6 @@ namespace CrudCliente.Domain.Entities
         public string Estado { get; set; }
         public string Pais { get; set; }
         public string? Observacoes { get; set; }
-
         public ClienteEntity Cliente { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using CrudCliente.Applications.Facade.Cliente.Cadastrar;
 using CrudCliente.Applications.Mappings;
+using CrudCliente.Applications.Strategy;
 using CrudCliente.Infra.Config;
 using CrudCliente.Infra.Repository.Cliente;
 using CrudCliente.Infra.Repository.Cliente.Cartao;
@@ -22,10 +23,14 @@ builder.Services.AddAutoMapper(typeof(ClienteProfile).Assembly);
 builder.Services.AddScoped<IClienteFacade, ClienteFacade>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<ICartaoRepository, CartaoRepository>();
-builder.Services.AddScoped<ITelefoneRepository, TelefoneRepository>();
 builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 builder.Services.AddScoped<ICartaoRepository, CartaoRepository>();
 builder.Services.AddScoped<ICartaoFacade, CartaoFacade>();
+builder.Services.AddScoped<IEnderecoFacade, EnderecoFacade>();
+builder.Services.AddScoped<ITelefoneRepository, TelefoneRepository>();
+builder.Services.AddScoped<AtribuirNumeroRankingStrategy>();
+
+
 
 
 var app = builder.Build();

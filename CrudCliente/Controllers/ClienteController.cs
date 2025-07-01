@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CrudCliente.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[ClienteController]")]
 
     public class ClienteController : ControllerBase
     {
@@ -37,7 +37,7 @@ namespace CrudCliente.Controllers
         }
 
         [HttpGet]
-        [Route("/Listar/Cliente")]
+        [Route("/Listar/Clientes")]
         [ProducesResponseType(typeof(List<ResponseClienteDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult ListarClientes()
@@ -47,7 +47,7 @@ namespace CrudCliente.Controllers
                 var clientes = _clienteFacade.ListarClientes();
                 return Ok(clientes);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Erro interno ao listar clientes.");
             }
@@ -59,14 +59,11 @@ namespace CrudCliente.Controllers
         {
             try
             {
-                var atualizado = _clienteFacade.EditarCliente(id, dto);
-
-                if (!atualizado)
-                    return NotFound("Cliente não encontrado");
+                _clienteFacade.EditarCliente(id, dto);
 
                 return Ok("Cliente atualizado com sucesso!");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest("Erro ao atualizar cliente");
             }
@@ -85,7 +82,7 @@ namespace CrudCliente.Controllers
 
                 return Ok("Cliente inativado com sucesso!");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest("Erro ao inativar cliente.");
             }
@@ -120,5 +117,12 @@ namespace CrudCliente.Controllers
                 return BadRequest("Erro ao cadastrar cartão, revise os dados enviados.");
             }
         }
+
+        
+
+        ////TODO Método Filtrar Cliente (Front).
+        //       Método Validar Senha forte. (Strategy)
+        //       Método Criptografar senha
+        //       Método ValidarExistencia Enderecos
     }
 }

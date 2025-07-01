@@ -11,6 +11,5 @@ namespace CrudCliente.Domain.Entities
         public int Cvc { get; set; }
         public BandeiraCartao Bandeira { get; set; }
 
-        public ClienteEntity Cliente { get; set; }
     }
 }

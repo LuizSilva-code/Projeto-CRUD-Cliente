@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Applications\Interfaces\**" />
+    <Compile Remove="Infra\Repository\Cliente\Telefon\**" />
     <Content Remove="Applications\Interfaces\**" />
+    <Content Remove="Infra\Repository\Cliente\Telefon\**" />
     <EmbeddedResource Remove="Applications\Interfaces\**" />
+    <EmbeddedResource Remove="Infra\Repository\Cliente\Telefon\**" />
     <None Remove="Applications\Interfaces\**" />
+    <None Remove="Infra\Repository\Cliente\Telefon\**" />
   </ItemGroup>
 
   <ItemGroup>

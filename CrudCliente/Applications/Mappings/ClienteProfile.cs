@@ -46,7 +46,7 @@ namespace CrudCliente.Applications.Mappings
                     opt.MapFrom(src => !string.IsNullOrWhiteSpace(src.Cpf) ? src.Cpf : null))
 
                 .ForMember(dest => dest.DtNasc, opt =>
-                    opt.MapFrom(src => src.DataNascimento.HasValue ? src.DataNascimento.Value : default(DateTime)))
+                    opt.MapFrom(src => src.DtNascimento.HasValue ? src.DtNascimento.Value : default(DateTime)))
 
                 .ForMember(dest => dest.Email, opt =>
                     opt.MapFrom(src => !string.IsNullOrWhiteSpace(src.Email) ? src.Email : null))
@@ -117,8 +117,7 @@ namespace CrudCliente.Applications.Mappings
                 .ForMember(dest => dest.Cvc, opt => opt.MapFrom(src => src.Cvc))
                 .ForMember(dest => dest.Bandeira, opt => opt.MapFrom(src => (BandeiraCartao)src.Bandeira))
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.ClienteId, opt => opt.Ignore())
-                .ForMember(dest => dest.Cliente, opt => opt.Ignore());
+                .ForMember(dest => dest.ClienteId, opt => opt.Ignore());
 
             CreateMap<CartaoDeCreditoEntity, ClienteDTO>()
                 .ForMember(dest => dest.NumCartao, opt => opt.MapFrom(src => src.NumCartao))

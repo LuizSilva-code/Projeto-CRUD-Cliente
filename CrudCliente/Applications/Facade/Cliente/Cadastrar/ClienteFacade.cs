@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CrudCliente.Applications.DTO;
+using CrudCliente.Applications.Strategy;
 using CrudCliente.Domain.Entities;
 using CrudCliente.Infra.Repository.Cliente;
 using CrudCliente.Infra.Repository.Cliente.Cartao;
@@ -16,16 +17,20 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
         private readonly IClienteRepository _clienteRepository;
         private readonly IEnderecoRepository _enderecoRepository;
         private readonly ITelefoneRepository _telefoneRepository;
-        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository)
+        private readonly AtribuirNumeroRankingStrategy _atribuirNumeroRankingStrategy;
+
+        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository, AtribuirNumeroRankingStrategy atribuirNumeroRankingStrategy)
         {
             _mapper = mapper;
             _clienteRepository = clienteRepository;
             _telefoneRepository = telefoneRepository;
             _enderecoRepository = enderecorepository;
+            _atribuirNumeroRankingStrategy = atribuirNumeroRankingStrategy;
         }
 
         public void CadastrarCliente(ClienteDTO clientedto)
         {
+            clientedto.NumRanking = _atribuirNumeroRankingStrategy.AtribuirNumeroNoRanking();
             var cliente = _mapper.Map<ClienteEntity>(clientedto);
             var endereco = _mapper.Map<EnderecoEntity>(clientedto);
             var telefone = _mapper.Map<TelefoneEntity>(clientedto);
@@ -47,12 +52,12 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
             return _mapper.Map<List<ResponseClienteDTO>>(clientes);
         }
 
-        public bool EditarCliente(int id, EditarClienteDTO dto)
+        public void EditarCliente(int id, EditarClienteDTO dto)
         {
             var clienteEntity = _mapper.Map<ClienteEntity>(dto);
             clienteEntity.Id = id;
 
-            return _clienteRepository.EditarCliente(id, dto);
+            _clienteRepository.EditarCliente(id, clienteEntity);
         }
 
         public bool InativarCliente(int id)

@@ -145,7 +145,7 @@ namespace CrudCliente.Infra.Repository.Cliente
             }
         }
 
-        public bool EditarCliente(int id, EditarClienteDTO dto)
+        public void EditarCliente(int id, ClienteEntity cliente)
         {
             using var connection = _context.Database.GetDbConnection();
             connection.Open();
@@ -154,79 +154,32 @@ namespace CrudCliente.Infra.Repository.Cliente
 
             try
             {
-                // Verifica se o cliente existe
-                var checkCmd = connection.CreateCommand();
-                checkCmd.Transaction = transaction;
-                checkCmd.CommandText = "SELECT COUNT(*) FROM Clientes WHERE Id = @Id;";
-                AddParameter(checkCmd, "@Id", id);
+                var updateSql = @"
+            UPDATE Clientes 
+            SET 
+                Nome = @Nome, 
+                Cpf = @Cpf, 
+                DtNasc = @DtNasc,
+                Genero = @Genero, 
+                Email = @Email, 
+                Senha = @Senha
+            WHERE Id = @Id";
 
-                var exists = Convert.ToInt32(checkCmd.ExecuteScalar()) > 0;
-                if (!exists)
-                {
-                    transaction.Rollback();
-                    return false;
-                }
+                var command = connection.CreateCommand();
+                command.Transaction = transaction;
+                command.CommandText = updateSql;
 
-                var camposParaAtualizar = new List<string>();
-                var parametros = new Dictionary<string, object>();
+                AddParameter(command, "@Nome", cliente.Nome);
+                AddParameter(command, "@Cpf", cliente.Cpf);
+                AddParameter(command, "@DtNasc", cliente.DtNasc);
+                AddParameter(command, "@Genero", (int)cliente.Genero);
+                AddParameter(command, "@Email", cliente.Email);
+                AddParameter(command, "@Senha", cliente.Senha);
+                AddParameter(command, "@Id", id);
 
-                if (!string.IsNullOrWhiteSpace(dto.Cpf))
-                {
-                    camposParaAtualizar.Add("Cpf = @Cpf");
-                    parametros.Add("@Cpf", dto.Cpf);
-                }
+                command.ExecuteNonQuery();
 
-                if (dto.DataNascimento.HasValue)
-                {
-                    camposParaAtualizar.Add("DtNasc = @DtNasc");
-                    parametros.Add("@DtNasc", dto.DataNascimento.Value);
-                }
-
-                if (!string.IsNullOrWhiteSpace(dto.Email))
-                {
-                    camposParaAtualizar.Add("Email = @Email");
-                    parametros.Add("@Email", dto.Email);
-                }
-
-                if (dto.Genero.HasValue)
-                {
-                    camposParaAtualizar.Add("Genero = @Genero");
-                    parametros.Add("@Genero", dto.Genero.Value);
-                }
-
-                if (!string.IsNullOrWhiteSpace(dto.Nome))
-                {
-                    camposParaAtualizar.Add("Nome = @Nome");
-                    parametros.Add("@Nome", dto.Nome);
-                }
-
-                if (!string.IsNullOrWhiteSpace(dto.Senha))
-                {
-                    camposParaAtualizar.Add("Senha = @Senha");
-                    parametros.Add("@Senha", dto.Senha);
-                }
-
-                if (!camposParaAtualizar.Any())
-                {
-                    transaction.Rollback();
-                    return false;
-                }
-
-                var updateSql = $"UPDATE Clientes SET {string.Join(", ", camposParaAtualizar)} WHERE Id = @Id";
-
-                var updateCmd = connection.CreateCommand();
-                updateCmd.Transaction = transaction;
-                updateCmd.CommandText = updateSql;
-
-                foreach (var param in parametros)
-                    AddParameter(updateCmd, param.Key, param.Value);
-
-                AddParameter(updateCmd, "@Id", id);
-
-                var rowsAffected = updateCmd.ExecuteNonQuery();
                 transaction.Commit();
-
-                return rowsAffected > 0;
             }
             catch (Exception)
             {
@@ -302,5 +255,17 @@ namespace CrudCliente.Infra.Repository.Cliente
             parameter.Value = value ?? DBNull.Value;
             command.Parameters.Add(parameter);
         }
+
+        public int ContarClientesAtivos()
+        {
+            using var connection = _context.Database.GetDbConnection();
+            connection.Open();
+
+            using var command = connection.CreateCommand();
+            command.CommandText = "SELECT COUNT(*) FROM Clientes WHERE CadastroAtivo = 1;";
+            var result = command.ExecuteScalar();
+            return Convert.ToInt32(result);
+        }
+
     }
 }
