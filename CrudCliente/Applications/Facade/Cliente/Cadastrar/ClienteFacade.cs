@@ -44,9 +44,8 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
             _validarCPFStrategy.Validar(clientedto.Cpf);
             _validarExistenciaClienteStrategy.Validar(clientedto.Cpf);
             _validarSenhaForteStrategy.Validar(clientedto.Senha);
-            // Mapeia os endereços primeiro para poder validar
             var enderecos = _mapper.Map<List<EnderecoEntity>>(clientedto.Enderecos);
-            _validarEnderecosStrategy.Validar(enderecos); // Chama a validação
+            _validarEnderecosStrategy.Validar(enderecos);
             clientedto.Senha = _criptografarSenhaStrategy.CriptografarSenha(clientedto.Senha);
             clientedto.NumRanking = _atribuirNumeroRankingStrategy.AtribuirNumeroNoRanking();
 
@@ -55,7 +54,6 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
 
             try
             {
-                //todo: validaçoes
                 _clienteRepository.CadastrarCliente(cliente, enderecos, telefone);
             }
             catch (Exception ex)

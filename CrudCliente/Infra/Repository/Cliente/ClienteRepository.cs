@@ -49,7 +49,6 @@ namespace CrudCliente.Infra.Repository.Cliente
 
                 var clienteId = Convert.ToInt32(command.ExecuteScalar());
 
-                // Alteração: Iterar e inserir cada endereço da lista
                 foreach (var endereco in enderecos)
                 {
                     var insertEnderecoSql = @"
