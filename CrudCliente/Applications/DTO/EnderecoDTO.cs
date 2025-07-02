@@ -5,7 +5,7 @@ namespace CrudCliente.Applications.DTO
 {
     public class EnderecoDTO
     {
-        public int Id {  get; set; }
+        public int Id { get; set; }
         public string Bairro { get; set; }
         public string Cep { get; set; }
         public string Cidade { get; set; }
