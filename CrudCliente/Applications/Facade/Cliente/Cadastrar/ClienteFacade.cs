@@ -23,8 +23,9 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
         private readonly CriptografarSenhaStrategy _criptografarSenhaStrategy;
         private readonly ValidarCPFStrategy _validarCPFStrategy;
         private readonly ValidarExistenciaClienteStrategy _validarExistenciaClienteStrategy;
+        private readonly ValidarEnderecosStrategy _validarEnderecosStrategy;
 
-        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository, AtribuirNumeroRankingStrategy atribuirNumeroRankingStrategy, ValidarSenhaForteStrategy validarSenhaForteStrategy, CriptografarSenhaStrategy criptografarSenhaStrategy, ValidarCPFStrategy validarCPFStrategy, ValidarExistenciaClienteStrategy validarExistenciaClienteStrategy)
+        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository, AtribuirNumeroRankingStrategy atribuirNumeroRankingStrategy, ValidarSenhaForteStrategy validarSenhaForteStrategy, CriptografarSenhaStrategy criptografarSenhaStrategy, ValidarCPFStrategy validarCPFStrategy, ValidarExistenciaClienteStrategy validarExistenciaClienteStrategy, ValidarEnderecosStrategy validarEnderecosStrategy)
         {
             _mapper = mapper;
             _clienteRepository = clienteRepository;
@@ -35,6 +36,7 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
             _criptografarSenhaStrategy = criptografarSenhaStrategy;
             _validarCPFStrategy = validarCPFStrategy;
             _validarExistenciaClienteStrategy = validarExistenciaClienteStrategy;
+            _validarEnderecosStrategy = validarEnderecosStrategy;
         }
 
         public void CadastrarCliente(ClienteDTO clientedto)
@@ -42,17 +44,19 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
             _validarCPFStrategy.Validar(clientedto.Cpf);
             _validarExistenciaClienteStrategy.Validar(clientedto.Cpf);
             _validarSenhaForteStrategy.Validar(clientedto.Senha);
+            // Mapeia os endereços primeiro para poder validar
+            var enderecos = _mapper.Map<List<EnderecoEntity>>(clientedto.Enderecos);
+            _validarEnderecosStrategy.Validar(enderecos); // Chama a validação
             clientedto.Senha = _criptografarSenhaStrategy.CriptografarSenha(clientedto.Senha);
             clientedto.NumRanking = _atribuirNumeroRankingStrategy.AtribuirNumeroNoRanking();
 
             var cliente = _mapper.Map<ClienteEntity>(clientedto);
-            var endereco = _mapper.Map<EnderecoEntity>(clientedto);
             var telefone = _mapper.Map<TelefoneEntity>(clientedto);
 
             try
             {
                 //todo: validaçoes
-                _clienteRepository.CadastrarCliente(cliente, endereco, telefone);
+                _clienteRepository.CadastrarCliente(cliente, enderecos, telefone);
             }
             catch (Exception ex)
             {

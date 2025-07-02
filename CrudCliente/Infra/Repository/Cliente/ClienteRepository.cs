@@ -18,7 +18,7 @@ namespace CrudCliente.Infra.Repository.Cliente
         {
             _context = context;
         }
-        public void CadastrarCliente(ClienteEntity cliente, EnderecoEntity endereco, TelefoneEntity telefone)
+        public void CadastrarCliente(ClienteEntity cliente, List<EnderecoEntity> enderecos, TelefoneEntity telefone)
         {
             using var connection = _context.Database.GetDbConnection();
             connection.Open();
@@ -49,31 +49,34 @@ namespace CrudCliente.Infra.Repository.Cliente
 
                 var clienteId = Convert.ToInt32(command.ExecuteScalar());
 
-                var insertEnderecoSql = @"
-                INSERT INTO Enderecos (ClienteId, TipoEndereco, TipoResidencia, TipoLogradouro, Nome, Logradouro, Numero, Cep, Bairro, Cidade, Estado, Pais, Observacoes)
-                VALUES (@ClienteId, @TipoEndereco, @TipoResidencia, @TipoLogradouro, @Nome, @Logradouro, @Numero, @Cep, @Bairro, @Cidade, @Estado, @Pais, @Observacoes);
-            ";
+                // Alteração: Iterar e inserir cada endereço da lista
+                foreach (var endereco in enderecos)
+                {
+                    var insertEnderecoSql = @"
+                    INSERT INTO Enderecos (ClienteId, TipoEndereco, TipoResidencia, TipoLogradouro, Nome, Logradouro, Numero, Cep, Bairro, Cidade, Estado, Pais, Observacoes)
+                    VALUES (@ClienteId, @TipoEndereco, @TipoResidencia, @TipoLogradouro, @Nome, @Logradouro, @Numero, @Cep, @Bairro, @Cidade, @Estado, @Pais, @Observacoes);
+                    ";
 
-                var enderecoCommand = connection.CreateCommand();
-                enderecoCommand.Transaction = transaction;
-                enderecoCommand.CommandText = insertEnderecoSql;
+                    var enderecoCommand = connection.CreateCommand();
+                    enderecoCommand.Transaction = transaction;
+                    enderecoCommand.CommandText = insertEnderecoSql;
 
-                AddParameter(enderecoCommand, "@ClienteId", clienteId);
-                AddParameter(enderecoCommand, "@TipoEndereco", (int)endereco.TipoEndereco);
-                AddParameter(enderecoCommand, "@TipoResidencia", (int)endereco.TipoResidencia);
-                AddParameter(enderecoCommand, "@TipoLogradouro", (int)endereco.TipoLogradouro);
-                AddParameter(enderecoCommand, "@Nome", endereco.Nome);
-                AddParameter(enderecoCommand, "@Logradouro", endereco.Logradouro);
-                AddParameter(enderecoCommand, "@Numero", endereco.Numero);
-                AddParameter(enderecoCommand, "@Cep", endereco.Cep);
-                AddParameter(enderecoCommand, "@Bairro", endereco.Bairro);
-                AddParameter(enderecoCommand, "@Cidade", endereco.Cidade);
-                AddParameter(enderecoCommand, "@Estado", endereco.Estado);
-                AddParameter(enderecoCommand, "@Pais", endereco.Pais);
-                AddParameter(enderecoCommand, "@Observacoes", endereco.Observacoes ?? string.Empty);
+                    AddParameter(enderecoCommand, "@ClienteId", clienteId);
+                    AddParameter(enderecoCommand, "@TipoEndereco", (int)endereco.TipoEndereco);
+                    AddParameter(enderecoCommand, "@TipoResidencia", (int)endereco.TipoResidencia);
+                    AddParameter(enderecoCommand, "@TipoLogradouro", (int)endereco.TipoLogradouro);
+                    AddParameter(enderecoCommand, "@Nome", endereco.Nome);
+                    AddParameter(enderecoCommand, "@Logradouro", endereco.Logradouro);
+                    AddParameter(enderecoCommand, "@Numero", endereco.Numero);
+                    AddParameter(enderecoCommand, "@Cep", endereco.Cep);
+                    AddParameter(enderecoCommand, "@Bairro", endereco.Bairro);
+                    AddParameter(enderecoCommand, "@Cidade", endereco.Cidade);
+                    AddParameter(enderecoCommand, "@Estado", endereco.Estado);
+                    AddParameter(enderecoCommand, "@Pais", endereco.Pais);
+                    AddParameter(enderecoCommand, "@Observacoes", endereco.Observacoes ?? string.Empty);
 
-                enderecoCommand.ExecuteNonQuery();
-
+                    enderecoCommand.ExecuteNonQuery();
+                }
                 var insertTelefoneSql = @"
                 INSERT INTO Telefones (ClienteId, TipoTelefone, Ddd, Numero)
                 VALUES (@ClienteId, @TipoTelefone, @Ddd, @Numero);

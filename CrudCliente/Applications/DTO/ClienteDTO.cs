@@ -15,18 +15,9 @@ namespace CrudCliente.Applications.DTO
         public bool CadastroAtivo { get; set; }
         public DateTime DtCadastro { get; set; }
         public int Genero { get; set; }
-        public int TipoEndereco { get; set; }
-        public int TipoResidencia { get; set; }
-        public int TipoLogradouro { get; set; }
-        public string NomeEndereco { get; set; }
-        public string Logradouro { get; set; }
-        public string Numero { get; set; }
-        public string Cep { get; set; }
-        public string Bairro { get; set; }
-        public string Cidade { get; set; }
-        public string Estado { get; set; }
-        public string Pais { get; set; }
-        public string? Observacoes { get; set; }
+
+        public List<EnderecoDTO> Enderecos { get; set; }
+
         public int TipoTelefone { get; set; }
         public string Ddd { get; set; }
         public string NumeroTelefone { get; set; }
