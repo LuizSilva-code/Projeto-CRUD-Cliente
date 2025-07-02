@@ -21,9 +21,9 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
         private readonly AtribuirNumeroRankingStrategy _atribuirNumeroRankingStrategy;
         private readonly ValidarSenhaForteStrategy _validarSenhaForteStrategy;
         private readonly CriptografarSenhaStrategy _criptografarSenhaStrategy;
+        private readonly ValidarCPFStrategy _validarCPFStrategy;
 
-
-        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository, AtribuirNumeroRankingStrategy atribuirNumeroRankingStrategy, ValidarSenhaForteStrategy validarSenhaForteStrategy, CriptografarSenhaStrategy criptografarSenhaStrategy)
+        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository, AtribuirNumeroRankingStrategy atribuirNumeroRankingStrategy, ValidarSenhaForteStrategy validarSenhaForteStrategy, CriptografarSenhaStrategy criptografarSenhaStrategy, ValidarCPFStrategy validarCPFStrategy)
         {
             _mapper = mapper;
             _clienteRepository = clienteRepository;
@@ -32,10 +32,12 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
             _atribuirNumeroRankingStrategy = atribuirNumeroRankingStrategy;
             _validarSenhaForteStrategy = validarSenhaForteStrategy;
             _criptografarSenhaStrategy = criptografarSenhaStrategy;
+            _validarCPFStrategy = validarCPFStrategy;
         }
 
         public void CadastrarCliente(ClienteDTO clientedto)
         {
+            _validarCPFStrategy.Validar(clientedto.Cpf);
             _validarSenhaForteStrategy.Validar(clientedto.Senha);
             clientedto.Senha = _criptografarSenhaStrategy.CriptografarSenha(clientedto.Senha);
             clientedto.NumRanking = _atribuirNumeroRankingStrategy.AtribuirNumeroNoRanking();
@@ -66,6 +68,7 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
             var clienteEntity = _mapper.Map<ClienteEntity>(dto);
             clienteEntity.Id = id;
 
+            _validarCPFStrategy.Validar(dto.Cpf);
             _validarSenhaForteStrategy.Validar(clienteEntity.Senha);
             clienteEntity.Senha = _criptografarSenhaStrategy.CriptografarSenha(clienteEntity.Senha);
             _clienteRepository.EditarCliente(id, clienteEntity);

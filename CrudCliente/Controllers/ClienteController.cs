@@ -121,8 +121,7 @@ namespace CrudCliente.Controllers
 
         
 
-        ////TODO Método Filtrar Cliente (Front).
-        //       Método Criptografar senha
+        //       Método ValidarExistenciaCliente
         //       Método ValidarExistencia Enderecos
     }
 }
