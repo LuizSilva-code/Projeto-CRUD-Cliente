@@ -19,6 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAutoMapper(typeof(ClienteProfile).Assembly);
+builder.Services.AddScoped<CriptografarSenhaStrategy>();
 
 builder.Services.AddScoped<IClienteFacade, ClienteFacade>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();

@@ -20,9 +20,10 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
         private readonly ITelefoneRepository _telefoneRepository;
         private readonly AtribuirNumeroRankingStrategy _atribuirNumeroRankingStrategy;
         private readonly ValidarSenhaForteStrategy _validarSenhaForteStrategy;
+        private readonly CriptografarSenhaStrategy _criptografarSenhaStrategy;
 
 
-        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository, AtribuirNumeroRankingStrategy atribuirNumeroRankingStrategy, ValidarSenhaForteStrategy validarSenhaForteStrategy)
+        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository, AtribuirNumeroRankingStrategy atribuirNumeroRankingStrategy, ValidarSenhaForteStrategy validarSenhaForteStrategy, CriptografarSenhaStrategy criptografarSenhaStrategy)
         {
             _mapper = mapper;
             _clienteRepository = clienteRepository;
@@ -30,11 +31,13 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
             _enderecoRepository = enderecorepository;
             _atribuirNumeroRankingStrategy = atribuirNumeroRankingStrategy;
             _validarSenhaForteStrategy = validarSenhaForteStrategy;
+            _criptografarSenhaStrategy = criptografarSenhaStrategy;
         }
 
         public void CadastrarCliente(ClienteDTO clientedto)
         {
             _validarSenhaForteStrategy.Validar(clientedto.Senha);
+            clientedto.Senha = _criptografarSenhaStrategy.CriptografarSenha(clientedto.Senha);
             clientedto.NumRanking = _atribuirNumeroRankingStrategy.AtribuirNumeroNoRanking();
 
             var cliente = _mapper.Map<ClienteEntity>(clientedto);
@@ -64,6 +67,7 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
             clienteEntity.Id = id;
 
             _validarSenhaForteStrategy.Validar(clienteEntity.Senha);
+            clienteEntity.Senha = _criptografarSenhaStrategy.CriptografarSenha(clienteEntity.Senha);
             _clienteRepository.EditarCliente(id, clienteEntity);
         }
 
@@ -75,6 +79,7 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
         public void AlterarSenha(int id, string novaSenha)
         {
             _validarSenhaForteStrategy.Validar(novaSenha);
+            novaSenha = _criptografarSenhaStrategy.CriptografarSenha(novaSenha);
             _clienteRepository.AlterarSenha(id, novaSenha);
         }
     }
