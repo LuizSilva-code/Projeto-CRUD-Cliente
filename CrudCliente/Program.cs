@@ -31,7 +31,7 @@ builder.Services.AddScoped<IEnderecoFacade, EnderecoFacade>();
 builder.Services.AddScoped<ITelefoneRepository, TelefoneRepository>();
 builder.Services.AddScoped<AtribuirNumeroRankingStrategy>();
 builder.Services.AddScoped<ValidarSenhaForteStrategy>();
-
+builder.Services.AddScoped<ValidarExistenciaClienteStrategy>();
 
 
 

@@ -22,8 +22,9 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
         private readonly ValidarSenhaForteStrategy _validarSenhaForteStrategy;
         private readonly CriptografarSenhaStrategy _criptografarSenhaStrategy;
         private readonly ValidarCPFStrategy _validarCPFStrategy;
+        private readonly ValidarExistenciaClienteStrategy _validarExistenciaClienteStrategy;
 
-        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository, AtribuirNumeroRankingStrategy atribuirNumeroRankingStrategy, ValidarSenhaForteStrategy validarSenhaForteStrategy, CriptografarSenhaStrategy criptografarSenhaStrategy, ValidarCPFStrategy validarCPFStrategy)
+        public ClienteFacade(IMapper mapper, IClienteRepository clienteRepository, IEnderecoRepository enderecorepository, ITelefoneRepository telefoneRepository, AtribuirNumeroRankingStrategy atribuirNumeroRankingStrategy, ValidarSenhaForteStrategy validarSenhaForteStrategy, CriptografarSenhaStrategy criptografarSenhaStrategy, ValidarCPFStrategy validarCPFStrategy, ValidarExistenciaClienteStrategy validarExistenciaClienteStrategy)
         {
             _mapper = mapper;
             _clienteRepository = clienteRepository;
@@ -33,11 +34,13 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
             _validarSenhaForteStrategy = validarSenhaForteStrategy;
             _criptografarSenhaStrategy = criptografarSenhaStrategy;
             _validarCPFStrategy = validarCPFStrategy;
+            _validarExistenciaClienteStrategy = validarExistenciaClienteStrategy;
         }
 
         public void CadastrarCliente(ClienteDTO clientedto)
         {
             _validarCPFStrategy.Validar(clientedto.Cpf);
+            _validarExistenciaClienteStrategy.Validar(clientedto.Cpf);
             _validarSenhaForteStrategy.Validar(clientedto.Senha);
             clientedto.Senha = _criptografarSenhaStrategy.CriptografarSenha(clientedto.Senha);
             clientedto.NumRanking = _atribuirNumeroRankingStrategy.AtribuirNumeroNoRanking();
@@ -69,6 +72,7 @@ namespace CrudCliente.Applications.Facade.Cliente.Cadastrar
             clienteEntity.Id = id;
 
             _validarCPFStrategy.Validar(dto.Cpf);
+            _validarExistenciaClienteStrategy.Validar(dto.Cpf);
             _validarSenhaForteStrategy.Validar(clienteEntity.Senha);
             clienteEntity.Senha = _criptografarSenhaStrategy.CriptografarSenha(clienteEntity.Senha);
             _clienteRepository.EditarCliente(id, clienteEntity);
